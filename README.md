@@ -41,47 +41,161 @@ It gives you a score (0-100) and tells you exactly what's making your code hard 
 
 ## Installation
 
-### Global Installation (Recommended)
+There are three ways to install and use this tool:
+
+### Option 1: Install from npm (Recommended)
+
+**Global Installation** - Use the tool anywhere on your system:
 
 ```bash
+# Install globally
 npm install -g cognitive-debt
+
+# Verify installation
+cognitive-debt --version
+
+# Use immediately
+cognitive-debt src/
 ```
 
-### Local Installation (Per Project)
+**Local Installation** - Add to a specific project:
 
 ```bash
+# Install as dev dependency
 npm install --save-dev cognitive-debt
+
+# Add to package.json scripts
+{
+  "scripts": {
+    "analyze": "cognitive-debt src/",
+    "check-debt": "cognitive-debt src/ --format json"
+  }
+}
+
+# Run via npm
+npm run analyze
+
+# Or use npx
+npx cognitive-debt src/
 ```
 
-### From Source
+### Option 2: Clone from GitHub
+
+**For Development or Contributing:**
 
 ```bash
-git clone https://github.com/motiramshinde/CodeKarma.git
-cd CodeKarma
+# Clone the repository
+git clone https://github.com/motiram944/cognitive-debt.git
+
+# Navigate to directory
+cd cognitive-debt
+
+# Install dependencies
 npm install
+
+# Link globally (makes 'cognitive-debt' command available)
 npm link
+
+# Now you can use it
+cognitive-debt src/
+
+# Or run directly
+node bin/cognitive-debt.js src/
+```
+
+**For Using in Your Project:**
+
+```bash
+# Clone into your project
+git clone https://github.com/motiram944/cognitive-debt.git
+
+# Install dependencies
+cd cognitive-debt
+npm install
+
+# Run from the directory
+node bin/cognitive-debt.js /path/to/your/code
+```
+
+### Option 3: Quick Try (No Installation)
+
+```bash
+# Use npx to run without installing
+npx cognitive-debt src/
 ```
 
 ## Usage
 
-### Analyze a single file
+### Basic Commands
+
+**Analyze a single file:**
 ```bash
 cognitive-debt src/index.js
 ```
 
-### Analyze a directory
+**Analyze a directory:**
 ```bash
 cognitive-debt src/
 ```
 
-### Get JSON output
+**Analyze with JSON output:**
 ```bash
 cognitive-debt src/ --format json
 ```
 
-### Use custom configuration
+**Use custom configuration:**
 ```bash
 cognitive-debt src/ --config .cognitivedebtrc.json
+```
+
+### Common Use Cases
+
+**1. Check code quality before commit:**
+```bash
+# Add to pre-commit hook
+cognitive-debt src/ || echo "Warning: High cognitive debt detected"
+```
+
+**2. CI/CD Integration:**
+```bash
+# In your CI pipeline (e.g., GitHub Actions, GitLab CI)
+npm install -g cognitive-debt
+cognitive-debt src/ --format json > cognitive-debt-report.json
+
+# Fail build if score is too low
+cognitive-debt src/ || exit 1
+```
+
+**3. Project-specific npm scripts:**
+```json
+{
+  "scripts": {
+    "analyze": "cognitive-debt src/",
+    "analyze:json": "cognitive-debt src/ --format json",
+    "analyze:watch": "watch 'cognitive-debt src/' src/"
+  }
+}
+```
+
+**4. Analyze specific files:**
+```bash
+# Single file
+cognitive-debt src/utils/helper.js
+
+# Multiple files
+cognitive-debt src/index.js src/app.js src/config.js
+```
+
+**5. Compare before and after refactoring:**
+```bash
+# Before
+cognitive-debt src/legacy.js > before.txt
+
+# After refactoring
+cognitive-debt src/refactored.js > after.txt
+
+# Compare
+diff before.txt after.txt
 ```
 
 ## Example Output
@@ -283,8 +397,9 @@ Built on the shoulders of:
 
 ## Contact
 
-Issues: [GitHub Issues](https://github.com/motiramshinde/CodeKarma/issues)  
-npm: [cognitive-debt](https://www.npmjs.com/package/cognitive-debt)
+- **GitHub**: [motiram944/cognitive-debt](https://github.com/motiram944/cognitive-debt)
+- **Issues**: [GitHub Issues](https://github.com/motiram944/cognitive-debt/issues)  
+- **npm**: [cognitive-debt](https://www.npmjs.com/package/cognitive-debt)
 
 This is a tool by developers, for developers. We're figuring it out as we go.
 
