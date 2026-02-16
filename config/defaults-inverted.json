@@ -1,0 +1,67 @@
+{
+    "comment": "Inverted scoring: Higher score = Higher cognitive burden (0=perfect, 100=unmaintainable)",
+    "thresholds": {
+        "nestingDepth": {
+            "ideal": 1,
+            "acceptable": 2,
+            "concerning": 3,
+            "problematic": 4,
+            "critical": 5
+        },
+        "functionLength": {
+            "ideal": 20,
+            "acceptable": 30,
+            "needsRefactoring": 50,
+            "critical": 70
+        },
+        "parameterCount": {
+            "ideal": 3,
+            "acceptable": 4,
+            "considerRefactoring": 5,
+            "problematic": 6,
+            "critical": 8
+        },
+        "dependencies": {
+            "ideal": 5,
+            "acceptable": 10,
+            "highCoupling": 15
+        }
+    },
+    "weights": {
+        "comment": "Weights must sum to 100",
+        "nestingDepth": 30,
+        "functionLength": 25,
+        "namingClarity": 20,
+        "parameterCount": 15,
+        "dependencies": 10
+    },
+    "scoringFormulas": {
+        "nestingDepth": "min(100, (max_depth - 1) * 25)",
+        "functionLength": "min(100, max(0, (avg_length - 20) * 2))",
+        "namingClarity": "(unclear_count / total_count) * 100",
+        "parameterCount": "min(100, max(0, (avg_params - 3) * 20))",
+        "dependencies": "min(100, max(0, (local_imports - 5) * 10))"
+    },
+    "grades": {
+        "excellent": {
+            "min": 0,
+            "max": 20
+        },
+        "good": {
+            "min": 21,
+            "max": 40
+        },
+        "fair": {
+            "min": 41,
+            "max": 60
+        },
+        "poor": {
+            "min": 61,
+            "max": 80
+        },
+        "critical": {
+            "min": 81,
+            "max": 100
+        }
+    }
+}

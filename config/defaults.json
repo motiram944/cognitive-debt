@@ -1,0 +1,21 @@
+{
+    "thresholds": {
+        "functionLength": 50,
+        "nestingDepth": 3,
+        "parameterCount": 4,
+        "maxLocalImports": 10
+    },
+    "weights": {
+        "functionLength": 0.5,
+        "nestingDepth": 10,
+        "parameterCount": 5,
+        "namingClarity": 30,
+        "dependencies": 2
+    },
+    "grades": {
+        "excellent": 80,
+        "good": 60,
+        "fair": 40,
+        "poor": 0
+    }
+}
