@@ -81,44 +81,59 @@ npx cognitive-debt src/
 
 ---
 
-## Usage
+## 📖 User Guide
 
-### Basic Commands
+### Running the CLI
+The basic command analyzes a file or directory and outputs a text report to your terminal.
 
 ```bash
-# Analyze a file
-cognitive-debt src/index.js
+# Analyze a specific file
+cognitive-debt src/utils/helper.js
 
-# Analyze a directory
+# Analyze an entire directory (recursive)
 cognitive-debt src/
-
-# JSON output
-cognitive-debt src/ --format json
-
-# Custom config
-cognitive-debt src/ --config .cognitivedebtrc.json
 ```
 
-### Common Use Cases
+### 📊 Generating Reports
+You can export the analysis to different formats using the `--output` flag.
 
-**CI/CD Integration:**
+#### HTML Dashboard (Recommended)
+Generate a standalone HTML file with interactive charts, score distributions, and detailed breakdowns of complex files.
+
 ```bash
-npm install -g cognitive-debt
-cognitive-debt src/ --format json > report.json
-cognitive-debt src/ || exit 1  # Fail build if score is low
+cognitive-debt src/ --output report.html
 ```
+- **View**: Open `report.html` in your browser.
+- **Features**: 
+  - **Score Distribution**: distinct colors for Excellent (Green), Good (Blue), Fair (Yellow), Poor (Red).
+  - **Time Breakdown**: "Time to Understand" chart showing the most complex files.
+  - **File Details**: Expandable rows showing exact issues and line numbers.
 
-**Pre-commit Hook:**
+#### JSON Data
+Generate a raw JSON file for integration with other tools (CI/CD, custom dashboards).
+
 ```bash
-cognitive-debt src/ || echo "Warning: High cognitive debt detected"
+cognitive-debt src/ --output report.json
 ```
 
-**npm Scripts:**
+---
+
+### CI/CD Integration
+Fail your build pipeline if cognitive debt is too high.
+
+```bash
+# Fail if any file has a "Poor" grade
+cognitive-debt src/ || exit 1
+```
+
+### Configuration
+Customize thresholds by creating a `.cognitivedebtrc.json` file in your project root.
+
 ```json
 {
-  "scripts": {
-    "analyze": "cognitive-debt src/",
-    "analyze:json": "cognitive-debt src/ --format json"
+  "thresholds": {
+    "functionLength": 60,
+    "nestingDepth": 4
   }
 }
 ```
