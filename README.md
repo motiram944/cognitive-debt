@@ -1,202 +1,128 @@
-# Code Karma
+# cognitive-debt
 
 [![npm version](https://img.shields.io/npm/v/cognitive-debt.svg)](https://www.npmjs.com/package/cognitive-debt)
 [![npm downloads](https://img.shields.io/npm/dm/cognitive-debt.svg)](https://www.npmjs.com/package/cognitive-debt)
 [![license](https://img.shields.io/npm/l/cognitive-debt.svg)](https://github.com/motiram944/cognitive-debt/blob/main/LICENSE)
 
-A CLI tool that measures cognitive debt in JavaScript and TypeScript codebases.
+**A CLI tool that measures cognitive debt in JavaScript and TypeScript codebases.**
 
-## The Problem
+Analyzes your code and gives you a score based on how hard it is to understand - not how correct it is, not how pretty it is, but how much mental effort it takes to read.
 
-You inherit a codebase. You open a file. You see:
-- A 200-line function
-- 8 levels of nested if-statements  
-- Variables named `tmp`, `data`, `x`
-- A function with 10 parameters
+---
 
-You think: "This is going to be hard to maintain."
-
-**Code Karma quantifies that feeling.**
-
-## What It Does
-
-Analyzes your code and calculates a **Cognitive Debt** score based on:
-
-1. **Function Length** - How many lines per function
-2. **Nesting Depth** - How deeply control flow is nested
-3. **Parameter Count** - How many parameters functions take
-4. **Naming Clarity** - How clear variable/function names are
-5. **Dependencies** - How many local imports each file has
-
-It gives you a score (0-100) and tells you exactly what's making your code hard to read.
-
-## What It Does NOT Do
-
-- ❌ Enforce style (use Prettier for that)
-- ❌ Find bugs (use ESLint for that)
-- ❌ Measure performance (use profilers for that)
-- ❌ Replace code review (use humans for that)
-
-**It measures one thing: how hard your code is to understand.**
-
-## Installation
-
-There are three ways to install and use this tool:
-
-### Option 1: Install from npm (Recommended)
-
-**Global Installation** - Use the tool anywhere on your system:
+## 📦 Quick Start
 
 ```bash
 # Install globally
 npm install -g cognitive-debt
 
-# Verify installation
-cognitive-debt --version
+# Analyze your code
+cognitive-debt src/
 
-# Use immediately
+# Get detailed JSON output
+cognitive-debt src/ --format json
+```
+
+---
+
+## 🎯 What It Measures
+
+1. **Function Length** - Long functions require more context switching
+2. **Nesting Depth** - Deep nesting exceeds working memory (Miller's Law: 7±2 items)
+3. **Parameter Count** - Many parameters increase cognitive load exponentially
+4. **Naming Clarity** - Unclear names force readers to hold mental mappings
+5. **Dependencies** - High coupling requires understanding multiple files simultaneously
+
+**Score**: 0-100 (higher = better code, easier to understand)
+
+---
+
+## 📚 Documentation
+
+- **[Installation Guide](#installation)** - npm, GitHub, or npx
+- **[Usage Examples](#usage)** - Basic commands and common use cases
+- **[Configuration](#configuration)** - Customize thresholds for your team
+- **[Scoring Details](SCORING_DESIGN.md)** - How the algorithm works
+- **[Contributing](CONTRIBUTING.md)** - Add new analyzers or improve scoring
+
+---
+
+## Installation
+
+### Option 1: npm (Recommended)
+
+**Global Installation:**
+```bash
+npm install -g cognitive-debt
 cognitive-debt src/
 ```
 
-**Local Installation** - Add to a specific project:
-
+**Local Installation:**
 ```bash
-# Install as dev dependency
 npm install --save-dev cognitive-debt
-
-# Add to package.json scripts
-{
-  "scripts": {
-    "analyze": "cognitive-debt src/",
-    "check-debt": "cognitive-debt src/ --format json"
-  }
-}
-
-# Run via npm
-npm run analyze
-
-# Or use npx
 npx cognitive-debt src/
 ```
 
-### Option 2: Clone from GitHub
-
-**For Development or Contributing:**
+### Option 2: GitHub
 
 ```bash
-# Clone the repository
 git clone https://github.com/motiram944/cognitive-debt.git
-
-# Navigate to directory
 cd cognitive-debt
-
-# Install dependencies
 npm install
-
-# Link globally (makes 'cognitive-debt' command available)
 npm link
-
-# Now you can use it
-cognitive-debt src/
-
-# Or run directly
-node bin/cognitive-debt.js src/
 ```
 
-**For Using in Your Project:**
+### Option 3: Try Without Installing
 
 ```bash
-# Clone into your project
-git clone https://github.com/motiram944/cognitive-debt.git
-
-# Install dependencies
-cd cognitive-debt
-npm install
-
-# Run from the directory
-node bin/cognitive-debt.js /path/to/your/code
-```
-
-### Option 3: Quick Try (No Installation)
-
-```bash
-# Use npx to run without installing
 npx cognitive-debt src/
 ```
+
+---
 
 ## Usage
 
 ### Basic Commands
 
-**Analyze a single file:**
 ```bash
+# Analyze a file
 cognitive-debt src/index.js
-```
 
-**Analyze a directory:**
-```bash
+# Analyze a directory
 cognitive-debt src/
-```
 
-**Analyze with JSON output:**
-```bash
+# JSON output
 cognitive-debt src/ --format json
-```
 
-**Use custom configuration:**
-```bash
+# Custom config
 cognitive-debt src/ --config .cognitivedebtrc.json
 ```
 
 ### Common Use Cases
 
-**1. Check code quality before commit:**
+**CI/CD Integration:**
 ```bash
-# Add to pre-commit hook
+npm install -g cognitive-debt
+cognitive-debt src/ --format json > report.json
+cognitive-debt src/ || exit 1  # Fail build if score is low
+```
+
+**Pre-commit Hook:**
+```bash
 cognitive-debt src/ || echo "Warning: High cognitive debt detected"
 ```
 
-**2. CI/CD Integration:**
-```bash
-# In your CI pipeline (e.g., GitHub Actions, GitLab CI)
-npm install -g cognitive-debt
-cognitive-debt src/ --format json > cognitive-debt-report.json
-
-# Fail build if score is too low
-cognitive-debt src/ || exit 1
-```
-
-**3. Project-specific npm scripts:**
+**npm Scripts:**
 ```json
 {
   "scripts": {
     "analyze": "cognitive-debt src/",
-    "analyze:json": "cognitive-debt src/ --format json",
-    "analyze:watch": "watch 'cognitive-debt src/' src/"
+    "analyze:json": "cognitive-debt src/ --format json"
   }
 }
 ```
 
-**4. Analyze specific files:**
-```bash
-# Single file
-cognitive-debt src/utils/helper.js
-
-# Multiple files
-cognitive-debt src/index.js src/app.js src/config.js
-```
-
-**5. Compare before and after refactoring:**
-```bash
-# Before
-cognitive-debt src/legacy.js > before.txt
-
-# After refactoring
-cognitive-debt src/refactored.js > after.txt
-
-# Compare
-diff before.txt after.txt
-```
+---
 
 ## Example Output
 
@@ -230,10 +156,6 @@ Metrics Summary:
     Unclear names: 42%
     Total identifiers: 89
 
-  ✓ Dependencies:
-    Local imports: 8
-    External imports: 12
-
 Top Issues:
 
   1. Function 'handleRequest' is too long (142 lines) (line 23)
@@ -243,23 +165,7 @@ Top Issues:
 ═══════════════════════════════════════════
 ```
 
-## How Scoring Works
-
-**Current implementation: Higher score = Better code**
-
-- **80-100**: Excellent (low cognitive debt)
-- **60-79**: Good (manageable)
-- **40-59**: Fair (needs attention)
-- **0-39**: Poor (high debt)
-
-The tool starts at 100 and subtracts penalties for:
-- Long functions
-- Deep nesting
-- Too many parameters
-- Unclear names
-- High coupling
-
-See [SCORING_DESIGN.md](SCORING_DESIGN.md) for the full formula and rationale.
+---
 
 ## Configuration
 
@@ -283,7 +189,7 @@ Create `.cognitivedebtrc.json` in your project root:
 }
 ```
 
-Adjust these based on your team's standards.
+---
 
 ## Why This Tool Exists
 
@@ -296,112 +202,38 @@ Because:
 - Cognitive load is the #1 barrier to onboarding new contributors
 - "Technical debt" is often really "cognitive debt"
 
+---
+
 ## What Makes This Different
 
-### 1. Transparent
-No black-box ML. Every score is simple math you can audit. See [SCORING_DESIGN.md](SCORING_DESIGN.md).
+✅ **Transparent** - No black-box ML. Simple math you can audit  
+✅ **Local-Only** - No API keys, no cloud services, your code never leaves your machine  
+✅ **Configurable** - Adjust thresholds for your team's standards  
+✅ **Educational** - Explains *why* code is hard to read, not just that it is  
 
-### 2. Local-Only
-No API keys. No cloud services. Your code never leaves your machine.
-
-### 3. Configurable
-Don't like our thresholds? Change them. It's your codebase.
-
-### 4. Educational
-The tool explains *why* code is hard to read, not just that it is.
-
-## Limitations
-
-### This tool is NOT perfect
-
-- **Context-blind**: Doesn't know if your 100-line function is a state machine that *should* be long
-- **Heuristic-based**: Naming clarity uses simple pattern matching, not semantic analysis
-- **Single-file**: Doesn't track complexity across file boundaries (yet)
-
-**Use your judgment.** A score is a signal, not a verdict.
+---
 
 ## Contributing
 
-This tool is designed for community contributions.
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+- How to add new analyzers
+- How to improve scoring
+- Code standards
+- Development setup
 
-### Adding a New Analyzer
-
-1. Create `src/analyzers/yourAnalyzer.js`
-2. Export an `analyze(ast, filePath)` function that returns metrics
-3. Add it to `src/index.js`
-4. Update weights in `config/defaults.json`
-5. Add tests
-
-See existing analyzers for examples.
-
-### Improving Scoring
-
-The scoring formula is in `src/scoring/calculator.js`. 
-
-If you think the weights are wrong, open an issue with:
-- Your proposed changes
-- Rationale (ideally with research citations)
-- Example code that should score differently
-
-### Code Standards
-
-This tool measures cognitive debt, so it should have low cognitive debt:
-- Functions under 50 lines
-- Nesting under 3 levels
-- Clear names
-- Comments explaining *why*, not *what*
-
-Run the tool on itself: `cognitive-debt src/`
-
-## Ethical Statement
-
-### What We Believe
-
-1. **Code is for humans first, computers second**  
-   If a computer can run it but a human can't understand it, it's not good code.
-
-2. **Metrics are tools, not targets**  
-   Goodhart's Law: "When a measure becomes a target, it ceases to be a good measure." Don't game the score.
-
-3. **Context matters**  
-   A 200-line function might be fine if it's a generated parser. Use your brain.
-
-4. **Accessibility is a feature**  
-   Code that's hard to understand excludes junior developers and non-native English speakers.
-
-### What We Don't Believe
-
-- ❌ That a single number can capture code quality
-- ❌ That all code should look the same
-- ❌ That tools can replace human judgment
-- ❌ That "clean code" is always the right answer
-
-### Our Commitment
-
-- We will keep the algorithm transparent and auditable
-- We will not add telemetry or phone home
-- We will not sell this tool or your data
-- We will listen to feedback and adjust when we're wrong
+---
 
 ## License
 
 MIT - Use it however you want.
 
-## Acknowledgments
+---
 
-Built on the shoulders of:
-- **Babel** - For AST parsing
-- **Commander** - For CLI framework
-- **Robert Martin** - For "Clean Code" principles
-- **Every developer** who's struggled with unmaintainable code
+## Links
 
-## Contact
-
-- **GitHub**: [motiram944/cognitive-debt](https://github.com/motiram944/cognitive-debt)
-- **Issues**: [GitHub Issues](https://github.com/motiram944/cognitive-debt/issues)  
 - **npm**: [cognitive-debt](https://www.npmjs.com/package/cognitive-debt)
-
-This is a tool by developers, for developers. We're figuring it out as we go.
+- **GitHub**: [motiram944/cognitive-debt](https://github.com/motiram944/cognitive-debt)
+- **Issues**: [Report bugs or request features](https://github.com/motiram944/cognitive-debt/issues)
 
 ---
 
