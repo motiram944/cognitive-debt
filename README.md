@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/cognitive-debt.svg)](https://www.npmjs.com/package/cognitive-debt)
 [![npm downloads](https://img.shields.io/npm/dm/cognitive-debt.svg)](https://www.npmjs.com/package/cognitive-debt)
-[![license](https://img.shields.io/npm/l/cognitive-debt.svg)](https://github.com/motiramshinde/CodeKarma/blob/main/LICENSE)
+[![license](https://img.shields.io/npm/l/cognitive-debt.svg)](https://github.com/motiram944/cognitive-debt/blob/main/LICENSE)
 
 A CLI tool that measures cognitive debt in JavaScript and TypeScript codebases.
 
