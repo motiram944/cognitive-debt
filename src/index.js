@@ -28,7 +28,7 @@ function analyzeFile(filePath, options = {}) {
 
     try {
         // Step 1: Parse the file into AST
-        const ast = parseFile(filePath);
+        const { ast, loc } = parseFile(filePath);
 
         // Step 2: Run all analyzers
         const metrics = {
@@ -37,6 +37,7 @@ function analyzeFile(filePath, options = {}) {
             parameterCount: parameterCountAnalyzer.analyze(ast, filePath),
             namingClarity: namingClarityAnalyzer.analyze(ast, filePath),
             dependencies: dependenciesAnalyzer.analyze(ast, filePath),
+            loc, // Add total lines of code to metrics
         };
 
         // Step 3: Calculate cognitive debt score
@@ -49,6 +50,7 @@ function analyzeFile(filePath, options = {}) {
 
         return {
             success: true,
+            filePath,
             output,
             scoreData,
             metrics,

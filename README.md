@@ -39,11 +39,12 @@ cognitive-debt src/ --format json
 
 ## 📚 Documentation
 
-- **[Installation Guide](#installation)** - npm, GitHub, or npx
-- **[Usage Examples](#usage)** - Basic commands and common use cases
-- **[Configuration](#configuration)** - Customize thresholds for your team
-- **[Scoring Details](SCORING_DESIGN.md)** - How the algorithm works
-- **[Contributing](CONTRIBUTING.md)** - Add new analyzers or improve scoring
+-   **[Installation Guide](#installation)** - npm, GitHub, or npx
+-   **[Usage Examples](#usage)** - Basic commands and common use cases
+-   **[Report Generation](#generating-reports)** - HTML dashboards and JSON output
+-   **[Configuration](#configuration)** - Customize thresholds for your team
+-   **[Scoring Details](SCORING_DESIGN.md)** - How the algorithm works
+-   **[Contributing](CONTRIBUTING.md)** - Add new analyzers or improve scoring
 
 ---
 
@@ -134,6 +135,7 @@ cognitive-debt src/ || echo "Warning: High cognitive debt detected"
 File: src/handlers/request.js
 
 Overall Score: 23/100 (Poor)
+Est. Time to Understand: 45 min
 
 Metrics Summary:
 

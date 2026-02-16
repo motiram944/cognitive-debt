@@ -26,6 +26,7 @@ function formatText(filePath, metrics, scoreData) {
     const scoreColor = getScoreColor(scoreData.grade);
     lines.push(chalk.bold('Overall Score: ') + scoreColor(`${scoreData.score}/100`) +
         ` (${scoreColor(scoreData.grade)})`);
+    lines.push(chalk.bold('Est. Time to Understand: ') + chalk.yellow(scoreData.timeToUnderstand));
     lines.push('');
 
     // Metrics summary
@@ -110,6 +111,7 @@ function formatJSON(filePath, metrics, scoreData) {
         file: filePath,
         score: scoreData.score,
         grade: scoreData.grade,
+        timeToUnderstand: scoreData.timeToUnderstand,
         breakdown: scoreData.breakdown,
         metrics: {
             functionLength: {
@@ -217,4 +219,109 @@ function collectTopIssues(metrics) {
 module.exports = {
     formatText,
     formatJSON,
+    formatHTML,
 };
+
+const renderHTML = require('./htmlTemplate');
+
+/**
+ * Format results as HTML
+ */
+function formatHTML(results) {
+    // Calculate summary statistics
+    let totalScore = 0;
+    let totalFiles = 0;
+    let totalLoc = 0;
+    let totalIssues = 0;
+    let totalTimeMinutes = 0;
+
+    // Chart data
+    const chartData = { excellent: 0, good: 0, fair: 0, poor: 0 };
+
+    const files = results.map(r => {
+        if (!r.success) return null;
+
+        const data = r.scoreData;
+        const metrics = r.metrics;
+        const issues = collectTopIssues(metrics);
+
+        totalScore += data.score;
+        totalFiles++;
+        totalLoc += metrics.loc || 0;
+        totalIssues += issues.length;
+        totalTimeMinutes += parseTimeToMinutes(data.timeToUnderstand);
+
+        // Update chart data
+        const gradeKey = data.grade.toLowerCase();
+        if (chartData[gradeKey] !== undefined) {
+            chartData[gradeKey]++;
+        }
+
+        return {
+            path: r.filePath,
+            score: data.score,
+            grade: data.grade,
+            timeToUnderstand: data.timeToUnderstand,
+            metrics: {
+                functionLength: { average: metrics.functionLength.averageLength },
+                nestingDepth: { max: metrics.nestingDepth.maxDepth },
+                parameterCount: { max: metrics.parameterCount.maxParams },
+            },
+            issues: issues,
+            issueCount: issues.length
+        };
+    }).filter(f => f !== null);
+
+    const averageScore = totalFiles > 0 ? Math.round(totalScore / totalFiles) : 0;
+
+    // Format total time back to string
+    const totalTimeHours = Math.floor(totalTimeMinutes / 60);
+    const remainingMinutes = totalTimeMinutes % 60;
+    const totalTimeString = totalTimeHours > 0
+        ? `${totalTimeHours}h ${remainingMinutes}m`
+        : `${remainingMinutes}m`;
+
+    const templateData = {
+        version: require('../../package.json').version,
+        date: new Date().toISOString(),
+        summary: {
+            averageScore,
+            averageGrade: getGradeFromScore(averageScore),
+            totalFiles,
+            totalLoc,
+            totalIssues,
+            totalTime: totalTimeString
+        },
+        chartData,
+        files
+    };
+
+    return renderHTML(templateData);
+}
+
+function getGradeFromScore(score) {
+    if (score >= 80) return 'Excellent';
+    if (score >= 60) return 'Good';
+    if (score >= 40) return 'Fair';
+    return 'Poor';
+}
+
+function parseTimeToMinutes(timeStr) {
+    if (!timeStr) return 0;
+
+    // Parse "2 hrs 15 min" or "45 min" or "< 1 min"
+    if (timeStr.includes('<')) return 1;
+
+    let minutes = 0;
+    const parts = timeStr.split(' ');
+
+    for (let i = 0; i < parts.length; i++) {
+        if (parts[i].includes('hr')) {
+            minutes += parseInt(parts[i - 1]) * 60;
+        } else if (parts[i].includes('min')) {
+            minutes += parseInt(parts[i - 1]);
+        }
+    }
+
+    return minutes;
+}

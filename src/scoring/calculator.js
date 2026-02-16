@@ -41,10 +41,14 @@ function calculateScore(metrics, config = null) {
     // Determine grade
     const grade = getGrade(score, config.grades);
 
+    // Calculate estimated time to understand
+    const timeToUnderstand = calculateTimeToUnderstand(metrics.loc, score);
+
     return {
         score: Math.round(score),
         grade,
         penalties,
+        timeToUnderstand,
         breakdown: {
             functionLength: {
                 score: Math.max(0, 100 - penalties.functionLength),
@@ -68,6 +72,48 @@ function calculateScore(metrics, config = null) {
             },
         },
     };
+}
+
+/**
+ * Calculate estimated time to understand the code
+ * 
+ * Heuristic:
+ * - Base speed: 20 lines per minute for clean code
+ * - Debt Penalty: Slower reading speed based on cognitive debt score
+ * 
+ * Formula:
+ * Time = (LOC / BaseSpeed) * (1 + (InvertedScore / 50))
+ * 
+ * @param {number} loc - Total lines of code
+ * @param {number} score - Cognitive debt score (0-100, higher is better)
+ * @returns {string} Human-readable time string (e.g., "15 min", "2 hours")
+ */
+function calculateTimeToUnderstand(loc, score) {
+    if (!loc) return "0 min";
+
+    // Base reading speed: 15 lines per minute for average code
+    const linesPerMinute = 15;
+
+    // Calculate debt factor (0 = perfect code, 1 = worst code)
+    // Score is 0-100 where higher is better, so we invert it
+    const debtFactor = (100 - score) / 100;
+
+    // Multiplier: 
+    // Score 100 -> Multiplier 1.0 (Normal speed)
+    // Score 0   -> Multiplier 3.0 (3x slower to read)
+    const complexityMultiplier = 1 + (debtFactor * 2);
+
+    // Calculate raw minutes
+    const minutes = (loc / linesPerMinute) * complexityMultiplier;
+
+    if (minutes < 1) return "< 1 min";
+    if (minutes < 60) return `${Math.ceil(minutes)} min`;
+
+    const hours = Math.floor(minutes / 60);
+    const remainingMin = Math.ceil(minutes % 60);
+
+    if (hours === 1) return `1 hr ${remainingMin} min`;
+    return `${hours} hrs ${remainingMin} min`;
 }
 
 /**

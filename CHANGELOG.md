@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2026-02-16
 
 ### Added
+- **New Feature**: "Est. Time to Understand" metric - calculates how long it takes to read the code based on complexity.
+- **New Feature**: HTML Report Generation - Create beautiful, interactive dashboards with `--output report.html`.
+- **New Feature**: JSON File Output - Save analysis data to disk with `--output report.json`.
+- **Documentation**: New `SCORING_LOGIC_EXPLAINED.md` deep dive guide.
+- **Documentation**: Comprehensive Installation and Usage guide in README.
+- **Assets**: Added good/bad code examples for marketing.
+- GitHub repository URLs updated to `motiram944`.
+- CI/CD integration examples.
 - Initial release of Code Karma
 - **Function Length Analyzer** - Measures lines of code per function
 - **Nesting Depth Analyzer** - Tracks control flow nesting levels
