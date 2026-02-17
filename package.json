@@ -1,11 +1,22 @@
 {
   "name": "cognitive-debt",
   "version": "1.2.0",
-  "description": "Analyze JavaScript/TypeScript complexity, calculate Cognitive Debt scores, and generate HTML reports. Better than cyclomatic complexity.",
+  "description": "Static analysis tool to measure code readability, cognitive complexity, and technical debt in JavaScript/TypeScript. Generates HTML reports and complexity scores.",
   "main": "src/index.js",
   "bin": {
     "cognitive-debt": "./bin/cognitive-debt.js"
   },
+  "files": [
+    "bin",
+    "src",
+    "config",
+    "docs",
+    "examples",
+    "LICENSE",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
+  ],
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
