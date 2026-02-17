@@ -5,6 +5,11 @@ All notable changes to Code Karma will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.2] - 2026-02-17
+
+### Improved
+- **SEO & Discovery**: Enhanced package metadata with richer keywords and description to improve search ranking on npm and search engines.
+
 ## [1.1.1] - 2026-02-16
 
 ### Fixed

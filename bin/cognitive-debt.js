@@ -194,5 +194,28 @@ program
         }
     });
 
+const { analyzeChangeImpact } = require('../src/impact/index');
+
+// ... existing code ...
+
+program
+    .command('impact')
+    .description('Forecast the risk of changing a specific file')
+    .argument('<file>', 'File path to analyze')
+    .action((file) => {
+        if (!fs.existsSync(file)) {
+            console.error(`Error: File not found: ${file}`);
+            process.exit(1);
+        }
+
+        const result = analyzeChangeImpact(file);
+        if (result.success) {
+            console.log(result.output);
+        } else {
+            console.error(`Error: ${result.error}`);
+            process.exit(1);
+        }
+    });
+
 // Parse command-line arguments
 program.parse();

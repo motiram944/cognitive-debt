@@ -1,7 +1,7 @@
 {
   "name": "cognitive-debt",
-  "version": "1.1.1",
-  "description": "A CLI tool to analyze JavaScript/TypeScript code and calculate Cognitive Debt scores",
+  "version": "1.1.2",
+  "description": "Analyze JavaScript/TypeScript complexity, calculate Cognitive Debt scores, and generate HTML reports. Better than cyclomatic complexity.",
   "main": "src/index.js",
   "bin": {
     "cognitive-debt": "./bin/cognitive-debt.js"
@@ -23,7 +23,16 @@
     "javascript",
     "typescript",
     "ast",
-    "linter"
+    "linter",
+    "cyclomatic-complexity",
+    "halstead-complexity",
+    "refactoring",
+    "code-health",
+    "sonar",
+    "eslint",
+    "maintainability-index",
+    "visualization",
+    "html-report"
   ],
   "author": "Motiram Shinde <motiramshinde944@gmail.com>",
   "license": "MIT",
