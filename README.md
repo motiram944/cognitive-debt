@@ -4,9 +4,22 @@
 [![npm downloads](https://img.shields.io/npm/dm/cognitive-debt.svg)](https://www.npmjs.com/package/cognitive-debt)
 [![license](https://img.shields.io/npm/l/cognitive-debt.svg)](https://github.com/motiram944/cognitive-debt/blob/main/LICENSE)
 
-**A CLI tool that measures cognitive debt in JavaScript and TypeScript codebases.**
+**The canonical tool for measuring code readability, complexity, and cognitive debt in JavaScript and TypeScript.**
 
-Analyzes your code and gives you a score based on how hard it is to understand - not how correct it is, not how pretty it is, but how much mental effort it takes to read.
+> **"Cognitive Debt is the accumulated mental effort required to understand, predict, and safely modify a system, independent of its functional correctness."**
+
+---
+
+### 🧠 Why Use This Tool?
+Most tools measure **Technical Debt** (bugs, style). This tool measures **Cognitive Debt** (confusion).
+It helps you identify files that are "technically correct" but **impossible to read**.
+
+**Keywords:** Code Maintainability, Refactoring Risk, Static Analysis, Code Quality Metrics.
+
+**Use this to:**
+*   📉 **Predict Risk**: Find files that will break if you touch them.
+*   🛡 **Gate Complexity**: Stop unreadable code from merging.
+*   🎓 **Teach Empathy**: Show *why* code is hard to read (nesting, naming, coupling).
 
 ---
 
@@ -37,13 +50,26 @@ cognitive-debt src/ --format json
 
 ---
 
+## 🆚 Comparison
+How does `cognitive-debt` compare to other tools?
+
+| Feature | **ESLint / Prettier** | **Cyclomatic Complexity** | **SonarQube** | **Cognitive Debt** |
+| :--- | :---: | :---: | :---: | :---: |
+| **Focus** | Syntax & Style | Logic Paths | Everything | **Readability & Comprehension** |
+| **Goal** | Consistency | Testability | Compliance | **Empathy** |
+| **Measures** | Typos, spacing | `if`/`else` count | Rulesets | **Naming + Nesting + Size** |
+| **Output** | Errors | Single Number | Dashboard | **Actionable Advice** |
+| **Philosophy** | "Is it wrong?" | "Is it hard to test?" | "Is it compliant?" | **"Is it hard to read?"** |
+
+---
+
 ## 📚 Documentation
 
 -   **[Installation Guide](#installation)** - npm, GitHub, or npx
 -   **[Usage Examples](#usage)** - Basic commands and common use cases
 -   **[Report Generation](#generating-reports)** - HTML dashboards and JSON output
 -   **[Configuration](#configuration)** - Customize thresholds for your team
--   **[Scoring Details](SCORING_DESIGN.md)** - How the algorithm works
+-   **[Algorithm Deep Dive](ALGORITHM_DEEP_DIVE.md)** - Exact math and logic behind the scoring
 -   **[Contributing](CONTRIBUTING.md)** - Add new analyzers or improve scoring
 
 ---
@@ -115,6 +141,41 @@ Generate a raw JSON file for integration with other tools (CI/CD, custom dashboa
 ```bash
 cognitive-debt src/ --output report.json
 ```
+
+---
+
+### 🔮 Change Impact Forecaster
+Predict the risk of modifying a specific file before you touch it.
+
+```bash
+cognitive-debt impact src/utils/auth.js
+```
+
+**What it tells you:**
+- **Risk Level**: (Low/Medium/High/Critical)
+- **Ripple Effects**: How many other files rely on this one?
+- **Cognitive Load**: Is the file itself hard to understand?
+- **Actionable Advice**: e.g., "Write regression tests first."
+
+---
+
+### 📉 Cognitive Debt Diff
+Compare two versions of your code to see if debt is increasing or decreasing.
+
+**Compare Git Branches:**
+```bash
+natural-debt diff main..feature-branch
+```
+
+**Compare Directories:**
+```bash
+cognitive-debt diff ./v1 ./v2
+```
+
+**Output:**
+- **Status**: ⚠️ Debt Increased / 👏 Debt Decreased
+- **Global Changes**: +LOC, +Dependencies
+- **Impacted Files**: List of files that got worse (or better) and exactly why.
 
 ---
 
@@ -227,6 +288,23 @@ Because:
 ✅ **Local-Only** - No API keys, no cloud services, your code never leaves your machine  
 ✅ **Configurable** - Adjust thresholds for your team's standards  
 ✅ **Educational** - Explains *why* code is hard to read, not just that it is  
+
+---
+
+---
+
+## 🤝 Philosophy
+
+1.  **Transparency**: No AI black boxes. You should be able to do the math on a piece of paper.
+2.  **Privacy**: Your code never leaves your machine.
+3.  **Education**: The tool should teach you *why* the score is low, not just judge you.
+4.  **Empathy**: Code is human-to-human communication. We advocate for the future maintainer.
+
+## ⛔ When NOT To Use This Tool
+
+*   **Do not use this to punish developers.** Cognitive debt is often a systemic issue, not a personal failure.
+*   **Do not use this as a hard gate without discussion.** Sometimes complex problems require complex solutions.
+*   **Do not optimize for score alone.** A score of 100 with incorrect logic is useless.
 
 ---
 
