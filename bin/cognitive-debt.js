@@ -217,5 +217,26 @@ program
         }
     });
 
+const { runDiff } = require('../src/diff/index');
+
+// ... existing code ...
+
+program
+    .command('diff')
+    .description('Compare cognitive debt between two states (git refs or directories)')
+    .argument('<base..target>', 'Git range (main..HEAD) or base directory')
+    .argument('[target]', 'Target directory (if using dir mode)')
+    .option('-o, --output <path>', 'Write diff report to json file')
+    .action(async (base, target, options) => {
+        // Normalize args
+        const args = target ? [base, target] : [base];
+
+        const result = await runDiff(args, options);
+        if (!result.success) {
+            console.error(chalk.red(`Error: ${result.error}`));
+            process.exit(1);
+        }
+    });
+
 // Parse command-line arguments
 program.parse();
